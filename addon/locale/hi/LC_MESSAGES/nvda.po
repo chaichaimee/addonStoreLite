@@ -1,0 +1,105 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: addonStoreLite 2026.11.0\n"
+"Report-Msgid-Bugs-To: chaicm75@gmail.com\n"
+"POT-Creation-Date: 2026-10-25 16:38+0700\n"
+"PO-Revision-Date: \n"
+"Last-Translator: chaiBot and Malee Yamazaki\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: ChaiBot Addon\n"
+
+#: displayFormats.py:38
+msgid "Abbreviated: name, version, author, date"
+msgstr "संक्षिप्त: नाम, संस्करण, लेखक, दिनांक"
+
+#: addonCore.py:317
+msgid "Add-on"
+msgstr "ऐड-ऑन"
+
+#: addonCore.py:314
+msgid "Add-on Store"
+msgstr "ऐड-ऑन स्टोर"
+
+#: settingsPanel.py:16
+msgid "Add-on Store Lite"
+msgstr "ऐड-ऑन स्टोर लाइट"
+
+#: settingsPanel.py:46
+msgid "Add-on Store Lite settings could not be saved"
+msgstr "ऐड-ऑन स्टोर लाइट सेटिंग्स सहेजी नहीं जा सकीं"
+
+#: addonCore.py:400
+msgid "Disable"
+msgstr "अक्षम करें"
+
+#: displayFormats.py:44
+msgid "Full wording: name, version, by author, date"
+msgstr "पूर्ण रूप: नाम, संस्करण, लेखक द्वारा, दिनांक"
+
+#: settingsPanel.py:33
+msgid "Item display &format:"
+msgstr "आइटम प्रदर्शन औरप्रारूप:"
+
+#: displayFormats.py:42
+msgid "Name and version only"
+msgstr "केवल नाम और संस्करण"
+
+#: displayFormats.py:40
+msgid "Name, version and date"
+msgstr "नाम, संस्करण और दिनांक"
+
+#: settingsPanel.py:23
+msgid "Show &abbreviations for items in the Add-on Store"
+msgstr "ऐड-ऑन स्टोर में आइटम्स के लिए संक्षिप्त रूप दिखाएं"
+
+#: addonCore.py:316
+msgid "Store"
+msgstr "स्टोर"
+
+#: addonCore.py:162
+msgid "addonStoreLite loaded"
+msgstr "addonStoreLite लोड हो गया"
+
+#: addonCore.py:446
+msgid "author"
+msgstr "लेखक"
+
+#: addonCore.py:444
+msgid "available version"
+msgstr "उपलब्ध संस्करण"
+
+#: addonCore.py:398
+msgid "disabled"
+msgstr "अक्षम"
+
+#: addonCore.py:450
+msgid "install date"
+msgstr "इंस्टॉल दिनांक"
+
+#: addonCore.py:442
+msgid "installed version"
+msgstr "इंस्टॉल किया गया संस्करण"
+
+#: addonCore.py:29
+msgid "of"
+msgstr "का"
+
+#: addonCore.py:452
+msgid "publication date"
+msgstr "प्रकाशन दिनांक"
+
+#: addonCore.py:448
+msgid "publisher"
+msgstr "प्रकाशक"
+
+#: addonCore.py:440
+msgid "status"
+msgstr "स्थिति"
+
+#: displayFormats.py:26
+msgid "{name}, version {version}, by {author}, {date}"
+msgstr "{name}, संस्करण {version}, लेखक: {author}, {date}"
