@@ -5,14 +5,17 @@ import re
 import time
 
 import addonHandler
+import api
 import controlTypes
 import globalPluginHandler
 import globalVars
 import logHandler
+import ui
+import wx
 from gui.settingsDialogs import NVDASettingsDialog
 from speech.extensions import filter_speechSequence
 
-from . import displayFormats, storeMemory, storeSettings
+from . import addonDownload, displayFormats, storeMemory, storeSettings
 from .settingsPanel import AddonStoreLiteSettingsPanel
 
 try:
@@ -24,6 +27,12 @@ addonHandler.initTranslation()
 
 # Seconds after the store opens during which its opening speech is rewritten
 _OPEN_SPEECH_WINDOW = 5.0
+
+# Seconds after the context menu closes during which the dialog re-announcement is dropped
+_MENU_RETURN_SILENCE_WINDOW = 3.0
+
+# Tabs whose first context menu entry installs or updates, so Download can follow it
+_DOWNLOAD_TABS = ("AVAILABLE", "UPDATE")
 
 # Translators: The word "of" in the "X of Y" item position that NVDA appends to list items
 _itemCountPattern = re.compile(r"(\s+\d+\s+" + re.escape(_("of")) + r"\s+\d+)$")
@@ -116,6 +125,60 @@ def _applyRememberedFilters(dialog):
 		dialog.enabledFilterCtrl.SetSelection(list(EnabledStatus).index(enabled))
 
 
+def _findStoreDialog(window):
+	current = window
+	for _level in range(6):
+		if current is None:
+			return None
+		if hasattr(current, "_storeVM"):
+			return current
+		current = current.GetParent()
+	return None
+
+
+def _copyDownloadUrl(model):
+	if api.copyToClip(addonDownload.getDownloadUrl(model)):
+		# Translators: Spoken after the add-on download address was copied to the clipboard
+		ui.message(_("Download URL copied"))
+	else:
+		# Translators: Spoken when the add-on download address could not be copied
+		ui.message(_("Could not copy the download URL"))
+
+
+def _showDownloadSize(menu, itemId, sizeBytes):
+	# The size arrives while the menu may already be open, so the label is changed in place
+	if not menu.FindItemById(itemId):
+		return
+	# Translators: Context menu item in the Add-on Store that saves the add-on file; {size} is its size such as 1.56 MB
+	menu.SetLabel(itemId, _("&Download {size}").format(size=addonDownload.formatSize(sizeBytes)))
+
+
+def _addDownloadItem(menu, targetWindow):
+	# NVDA may reuse the same wx.Menu between pop-ups, so drop the item added last time first
+	for staleItemId in getattr(menu, "_liteDownloadItemIds", ()):
+		if menu.FindItemById(staleItemId):
+			menu.Delete(staleItemId)
+	menu._liteDownloadItemIds = ()
+	dialog = _findStoreDialog(targetWindow)
+	if dialog is None or _getTabName(dialog) not in _DOWNLOAD_TABS:
+		return
+	selectedItem = dialog._storeVM.listVM.getSelection()
+	if selectedItem is None or not addonDownload.getDownloadUrl(selectedItem.model):
+		return
+	if menu.GetMenuItemCount() == 0:
+		return
+	model = selectedItem.model
+	# Translators: Context menu item in the Add-on Store that saves the add-on file to the download destination
+	downloadItem = menu.Insert(1, wx.ID_ANY, _("&Download"))
+	downloadItemId = downloadItem.GetId()
+	addonDownload.requestSize(model, lambda sizeBytes: _showDownloadSize(menu, downloadItemId, sizeBytes))
+	menu.Bind(wx.EVT_MENU, lambda event: addonDownload.beginDownload(model), downloadItem)
+	# Translators: Context menu item in the Add-on Store that copies the add-on download address to the clipboard
+	copyUrlItem = menu.Insert(2, wx.ID_ANY, _("Copy download &URL"))
+	menu.Bind(wx.EVT_MENU, lambda event: _copyDownloadUrl(model), copyUrlItem)
+	menu._liteDownloadItemIds = (downloadItem.GetId(), copyUrlItem.GetId())
+
+
 def _recordChannel(dialog):
 	storeMemory.rememberTabValue("channels", _getTabName(dialog), dialog._storeVM._filterChannelKey.name)
 
@@ -157,21 +220,31 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._isStoreActive = False
 		self._patched = []
 		self._openSpeech = None
+		self._menuReturnSilence = None
 		self._speechFilterRegistered = False
 		# Translators: Log message when the add-on is loaded
 		logHandler.log.info(_("addonStoreLite loaded"))
 		if globalVars.appArgs.secure:
 			return
+		# Loaded here so the settings panel and focus handler only ever read the cached values
+		storeSettings.get()
+		addonDownload.prepare()
 		NVDASettingsDialog.categoryClasses.append(AddonStoreLiteSettingsPanel)
 		try:
 			self._patchStore()
 		except Exception:
 			logHandler.log.exception("addonStoreLite: could not attach to the Add-on Store")
+		try:
+			self._patchContextMenu()
+		except Exception:
+			logHandler.log.exception("addonStoreLite: could not add Download to the context menu")
 
 	def terminate(self):
 		# Strict cleanup to prevent zombie state
+		addonDownload.stop()
 		self._isStoreActive = False
 		self._openSpeech = None
+		self._menuReturnSilence = None
 		if AddonStoreLiteSettingsPanel in NVDASettingsDialog.categoryClasses:
 			NVDASettingsDialog.categoryClasses.remove(AddonStoreLiteSettingsPanel)
 		if self._speechFilterRegistered:
@@ -225,6 +298,60 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		cls.__init__ = wrapper
 		self._patched.append((cls, "__init__", original))
 
+	def _wrapPopup(self, cls, name):
+		original = getattr(cls, name)
+
+		@functools.wraps(original)
+		def wrapper(menuObj, *args, **kwargs):
+			targetWindow = next((arg for arg in (*args, *kwargs.values()) if isinstance(arg, wx.Window)), None)
+			menuClassName = type(menuObj).__name__
+			if targetWindow is None or "Batch" in menuClassName or "SubMenu" in menuClassName:
+				return original(menuObj, *args, **kwargs)
+			originalPopup = targetWindow.PopupMenu
+
+			def popupWithDownload(menu, *popupArgs, **popupKwargs):
+				try:
+					_addDownloadItem(menu, targetWindow)
+				except Exception:
+					logHandler.log.exception("addonStoreLite: error adding the Download item")
+				self._armMenuReturnSilence(targetWindow)
+				try:
+					return originalPopup(menu, *popupArgs, **popupKwargs)
+				finally:
+					self._startMenuReturnSilenceWindow()
+
+			try:
+				targetWindow.PopupMenu = popupWithDownload
+			except (AttributeError, TypeError):
+				logHandler.log.debug("addonStoreLite: could not intercept the context menu pop-up")
+				return original(menuObj, *args, **kwargs)
+			try:
+				return original(menuObj, *args, **kwargs)
+			finally:
+				vars(targetWindow).pop("PopupMenu", None)
+
+		setattr(cls, name, wrapper)
+		self._patched.append((cls, name, original))
+
+	def _patchContextMenu(self):
+		from gui.addonStoreGui.controls import actions as storeActions
+
+		# Batch menus (several selected add-ons) are left alone; Download applies to one add-on
+		hookedNames = []
+		for className, menuClass in vars(storeActions).items():
+			if not isinstance(menuClass, type) or menuClass.__module__ != storeActions.__name__:
+				continue
+			if "Batch" in className or getattr(menuClass, "_is_protocol", False):
+				continue
+			for methodName, member in list(vars(menuClass).items()):
+				if "popup" in methodName.lower() and callable(member):
+					self._wrapPopup(menuClass, methodName)
+					hookedNames.append(f"{className}.{methodName}")
+		if not hookedNames:
+			logHandler.log.warning("addonStoreLite: no context menu pop-up method found, Download is unavailable")
+			return
+		logHandler.log.info(f"addonStoreLite: Download hooked into {', '.join(hookedNames)}")
+
 	def _patchStore(self):
 		from gui.addonStoreGui.controls.storeDialog import AddonStoreDialog
 		from gui.addonStoreGui.controls.addonList import AddonVirtualList
@@ -254,9 +381,50 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			"announced": False,
 		}
 
+	def _armMenuReturnSilence(self, targetWindow):
+		# Closing the context menu, by Escape or by choosing an item, makes NVDA re-announce the dialog
+		# title, the details of the selected add-on and the list label, though focus is still on the
+		# same list item. Armed while the menu is open; the time limit only starts once it closes.
+		self._menuReturnSilence = None
+		try:
+			dialog = _findStoreDialog(targetWindow)
+			if dialog is None:
+				return
+			self._menuReturnSilence = {
+				"deadline": float("inf"),
+				"title": str(dialog.title),
+				"listLabel": dialog.listLabel.GetLabel().replace("&", ""),
+			}
+		except Exception:
+			logHandler.log.exception("addonStoreLite: could not silence the dialog re-announcement")
+
+	def _startMenuReturnSilenceWindow(self):
+		if self._menuReturnSilence:
+			self._menuReturnSilence["deadline"] = time.monotonic() + _MENU_RETURN_SILENCE_WINDOW
+
+	def _dropMenuReturnSpeech(self, speechSequence):
+		state = self._menuReturnSilence
+		if time.monotonic() > state["deadline"]:
+			self._menuReturnSilence = None
+			return speechSequence
+		strings = [item for item in speechSequence if isinstance(item, str)]
+		if not strings:
+			return speechSequence
+		isTitle = strings[0].startswith(state["title"])
+		isListLabel = state["listLabel"] in [text.replace("&", "") for text in strings]
+		if not (isTitle or isListLabel):
+			# Our own messages ("Download URL copied") and the list item are spoken as usual
+			return speechSequence
+		if isListLabel:
+			# The list label is the last part of the re-announcement
+			self._menuReturnSilence = None
+		return [item for item in speechSequence if not isinstance(item, str)]
+
 	def _filterOpenSpeech(self, speechSequence):
 		# Rewrites only the first speech after the store opens: the dialog title plus the details of
 		# whichever add-on was selected, then the list label. The first list item is left untouched.
+		if self._menuReturnSilence:
+			return self._dropMenuReturnSpeech(speechSequence)
 		state = self._openSpeech
 		if not state:
 			return speechSequence

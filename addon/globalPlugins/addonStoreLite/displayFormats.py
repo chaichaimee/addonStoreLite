@@ -17,6 +17,10 @@ def _nameVersionDate(name, version, author, date, disabledLabel):
 	return " ".join(part for part in (name, version, disabledLabel, date) if part)
 
 
+def _nameVersionAuthor(name, version, author, date, disabledLabel):
+	return " ".join(part for part in (name, version, disabledLabel, author) if part)
+
+
 def _nameVersion(name, version, author, date, disabledLabel):
 	return " ".join(part for part in (name, version, disabledLabel) if part)
 
@@ -39,6 +43,8 @@ def getFormatChoices():
 		# Translators: Item display format in the settings panel
 		("nameVersionDate", _("Name, version and date")),
 		# Translators: Item display format in the settings panel
+		("nameVersionAuthor", _("Name, version and author")),
+		# Translators: Item display format in the settings panel
 		("nameVersion", _("Name and version only")),
 		# Translators: Item display format in the settings panel
 		("sentence", _("Full wording: name, version, by author, date")),
@@ -48,6 +54,7 @@ def getFormatChoices():
 _BUILDERS = {
 	"abbreviated": _abbreviated,
 	"nameVersionDate": _nameVersionDate,
+	"nameVersionAuthor": _nameVersionAuthor,
 	"nameVersion": _nameVersion,
 	"sentence": _sentence,
 }

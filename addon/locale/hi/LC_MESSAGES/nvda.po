@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: addonStoreLite 2026.11.0\n"
+"Project-Id-Version: addonStoreLite 2026.12.0\n"
 "Report-Msgid-Bugs-To: chaicm75@gmail.com\n"
-"POT-Creation-Date: 2026-10-25 16:38+0700\n"
+"POT-Creation-Date: 2026-11-18 11:11+0700\n"
 "PO-Revision-Date: \n"
 "Last-Translator: chaiBot and Malee Yamazaki\n"
 "Language-Team: Hindi\n"
@@ -12,94 +12,167 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: ChaiBot Addon\n"
 
-#: displayFormats.py:38
+#: settingsPanel.py:43
+msgid "&Browse..."
+msgstr "&ब्राउज़..."
+
+#: addonCore.py:172
+msgid "&Download"
+msgstr "डाउनलोड (&D)"
+
+#: addonCore.py:153
+msgid "&Download {size}"
+msgstr "डाउनलोड &Download {size}"
+
+#: addonDownload.py:114
+msgid "... shortened"
+msgstr "... संक्षिप्त किया गया"
+
+#: addonDownload.py:232
+msgid "A download is already in progress"
+msgstr "एक डाउनलोड पहले से ही प्रगति पर है"
+
+#: displayFormats.py:42
 msgid "Abbreviated: name, version, author, date"
 msgstr "संक्षिप्त: नाम, संस्करण, लेखक, दिनांक"
 
-#: addonCore.py:317
+#: addonCore.py:485
 msgid "Add-on"
 msgstr "ऐड-ऑन"
 
-#: addonCore.py:314
+#: addonCore.py:482
 msgid "Add-on Store"
 msgstr "ऐड-ऑन स्टोर"
 
-#: settingsPanel.py:16
+#: settingsPanel.py:18
 msgid "Add-on Store Lite"
 msgstr "ऐड-ऑन स्टोर लाइट"
 
-#: settingsPanel.py:46
+#: settingsPanel.py:70
 msgid "Add-on Store Lite settings could not be saved"
 msgstr "ऐड-ऑन स्टोर लाइट सेटिंग्स सहेजी नहीं जा सकीं"
 
-#: addonCore.py:400
+#: settingsPanel.py:54
+msgid "Choose the download destination"
+msgstr "डाउनलोड गंतव्य चुनें"
+
+#: addonCore.py:177
+msgid "Copy download &URL"
+msgstr "डाउनलोड &URL कॉपी करें"
+
+#: addonCore.py:145
+msgid "Could not copy the download URL"
+msgstr "डाउनलोड URL कॉपी नहीं किया जा सका"
+
+#: addonCore.py:568
 msgid "Disable"
 msgstr "अक्षम करें"
 
-#: displayFormats.py:44
+#: addonCore.py:142
+msgid "Download URL copied"
+msgstr "डाउनलोड URL कॉपी हो गया"
+
+#: settingsPanel.py:40
+msgid "Download destination (empty uses your Downloads folder):"
+msgstr "डाउनलोड गंतव्य (खाली छोड़ने पर आपके डाउनलोड्स फ़ोल्डर का उपयोग होगा):"
+
+#: addonDownload.py:303
+msgid "Download failed"
+msgstr "डाउनलोड विफल"
+
+#: addonDownload.py:278
+msgid "Download failed: the file did not match its checksum"
+msgstr "डाउनलोड विफल: फ़ाइल का चेकसम मेल नहीं खाया"
+
+#: addonDownload.py:258
+#: addonDownload.py:268
+msgid "Download failed: the file is too large"
+msgstr "डाउनलोड विफल: फ़ाइल बहुत बड़ी है"
+
+#: addonDownload.py:275
+msgid "Download failed: the file was empty"
+msgstr "डाउनलोड विफल: फ़ाइल खाली थी"
+
+#: addonDownload.py:238
+msgid "Downloading {name}"
+msgstr "{name} डाउनलोड हो रहा है"
+
+#: displayFormats.py:50
 msgid "Full wording: name, version, by author, date"
 msgstr "पूर्ण रूप: नाम, संस्करण, लेखक द्वारा, दिनांक"
 
-#: settingsPanel.py:33
+#: settingsPanel.py:35
 msgid "Item display &format:"
 msgstr "आइटम प्रदर्शन औरप्रारूप:"
 
-#: displayFormats.py:42
+#: displayFormats.py:48
 msgid "Name and version only"
 msgstr "केवल नाम और संस्करण"
 
-#: displayFormats.py:40
+#: displayFormats.py:46
+msgid "Name, version and author"
+msgstr "नाम, संस्करण और लेखक"
+
+#: displayFormats.py:44
 msgid "Name, version and date"
 msgstr "नाम, संस्करण और दिनांक"
 
-#: settingsPanel.py:23
+#: settingsPanel.py:25
 msgid "Show &abbreviations for items in the Add-on Store"
 msgstr "ऐड-ऑन स्टोर में आइटम्स के लिए संक्षिप्त रूप दिखाएं"
 
-#: addonCore.py:316
+#: addonCore.py:484
 msgid "Store"
 msgstr "स्टोर"
 
-#: addonCore.py:162
+#: settingsPanel.py:65
+msgid "The download destination must be a full folder path and was not changed"
+msgstr "डाउनलोड गंतव्य एक पूर्ण फ़ोल्डर पथ होना चाहिए और इसे बदला नहीं गया"
+
+#: addonDownload.py:228
+msgid "This add-on has no download address"
+msgstr "इस ऐड-ऑन का कोई डाउनलोड पता नहीं है"
+
+#: addonCore.py:226
 msgid "addonStoreLite loaded"
 msgstr "addonStoreLite लोड हो गया"
 
-#: addonCore.py:446
+#: addonCore.py:614
 msgid "author"
 msgstr "लेखक"
 
-#: addonCore.py:444
+#: addonCore.py:612
 msgid "available version"
 msgstr "उपलब्ध संस्करण"
 
-#: addonCore.py:398
+#: addonCore.py:566
 msgid "disabled"
 msgstr "अक्षम"
 
-#: addonCore.py:450
+#: addonCore.py:618
 msgid "install date"
 msgstr "इंस्टॉल दिनांक"
 
-#: addonCore.py:442
+#: addonCore.py:610
 msgid "installed version"
 msgstr "इंस्टॉल किया गया संस्करण"
 
-#: addonCore.py:29
+#: addonCore.py:38
 msgid "of"
 msgstr "का"
 
-#: addonCore.py:452
+#: addonCore.py:620
 msgid "publication date"
 msgstr "प्रकाशन दिनांक"
 
-#: addonCore.py:448
+#: addonCore.py:616
 msgid "publisher"
 msgstr "प्रकाशक"
 
-#: addonCore.py:440
+#: addonCore.py:608
 msgid "status"
 msgstr "स्थिति"
 
-#: displayFormats.py:26
+#: displayFormats.py:30
 msgid "{name}, version {version}, by {author}, {date}"
 msgstr "{name}, संस्करण {version}, लेखक: {author}, {date}"

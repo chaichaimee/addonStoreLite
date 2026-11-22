@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: addonStoreLite 2026.11.0\n"
+"Project-Id-Version: addonStoreLite 2026.12.0\n"
 "Report-Msgid-Bugs-To: chaicm75@gmail.com\n"
-"POT-Creation-Date: 2026-10-25 16:38+0700\n"
+"POT-Creation-Date: 2026-11-18 11:11+0700\n"
 "PO-Revision-Date: \n"
 "Last-Translator: chaiBot and Malee Yamazaki\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -12,95 +12,168 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: ChaiBot Addon\n"
 
-#: displayFormats.py:38
+#: settingsPanel.py:43
+msgid "&Browse..."
+msgstr "P&rocurar..."
+
+#: addonCore.py:172
+msgid "&Download"
+msgstr "&Baixar"
+
+#: addonCore.py:153
+msgid "&Download {size}"
+msgstr "&Baixar {size}"
+
+#: addonDownload.py:114
+msgid "... shortened"
+msgstr "... encurtado"
+
+#: addonDownload.py:232
+msgid "A download is already in progress"
+msgstr "Já há um download em andamento"
+
+#: displayFormats.py:42
 msgid "Abbreviated: name, version, author, date"
 msgstr "Abreviado: nome, versão, autor, data"
 
-#: addonCore.py:317
+#: addonCore.py:485
 msgid "Add-on"
 msgstr "Complemento"
 
-#: addonCore.py:314
+#: addonCore.py:482
 msgid "Add-on Store"
 msgstr "Loja de Complementos"
 
-#: settingsPanel.py:16
+#: settingsPanel.py:18
 msgid "Add-on Store Lite"
 msgstr "Loja de Complementos Lite"
 
-#: settingsPanel.py:46
+#: settingsPanel.py:70
 msgid "Add-on Store Lite settings could not be saved"
 msgstr "Não foi possível salvar as configurações da Loja de Complementos Lite"
 
-#: addonCore.py:400
+#: settingsPanel.py:54
+msgid "Choose the download destination"
+msgstr "Escolher o destino do download"
+
+#: addonCore.py:177
+msgid "Copy download &URL"
+msgstr "Copiar &URL do download"
+
+#: addonCore.py:145
+msgid "Could not copy the download URL"
+msgstr "Não foi possível copiar a URL do download"
+
+#: addonCore.py:568
 msgid "Disable"
 msgstr "Desativar"
 
-#: displayFormats.py:44
+#: addonCore.py:142
+msgid "Download URL copied"
+msgstr "URL do download copiada"
+
+#: settingsPanel.py:40
+msgid "Download destination (empty uses your Downloads folder):"
+msgstr "Destino do download (vazio usa sua pasta Downloads):"
+
+#: addonDownload.py:303
+msgid "Download failed"
+msgstr "Download falhou"
+
+#: addonDownload.py:278
+msgid "Download failed: the file did not match its checksum"
+msgstr "Falha no download: o arquivo não corresponde à soma de verificação"
+
+#: addonDownload.py:258
+#: addonDownload.py:268
+msgid "Download failed: the file is too large"
+msgstr "Falha no download: o arquivo é muito grande"
+
+#: addonDownload.py:275
+msgid "Download failed: the file was empty"
+msgstr "Falha no download: o arquivo estava vazio"
+
+#: addonDownload.py:238
+msgid "Downloading {name}"
+msgstr "Baixando {name}"
+
+#: displayFormats.py:50
 msgid "Full wording: name, version, by author, date"
 msgstr "Texto completo: nome, versão, por autor, data"
 
-#: settingsPanel.py:33
+#: settingsPanel.py:35
 msgid "Item display &format:"
 msgstr "Exibição de itens eformato:"
 
-#: displayFormats.py:42
+#: displayFormats.py:48
 msgid "Name and version only"
 msgstr "Apenas nome e versão"
 
-#: displayFormats.py:40
+#: displayFormats.py:46
+msgid "Name, version and author"
+msgstr "Nome, versão e autor"
+
+#: displayFormats.py:44
 msgid "Name, version and date"
 msgstr "Nome, versão e data"
 
-#: settingsPanel.py:23
+#: settingsPanel.py:25
 msgid "Show &abbreviations for items in the Add-on Store"
 msgstr "Mostrar &abreviações para os itens na Loja de Complementos"
 
-#: addonCore.py:316
+#: addonCore.py:484
 msgid "Store"
 msgstr "Loja"
 
-#: addonCore.py:162
+#: settingsPanel.py:65
+msgid "The download destination must be a full folder path and was not changed"
+msgstr "O destino do download deve ser um caminho de pasta completo e não foi alterado"
+
+#: addonDownload.py:228
+msgid "This add-on has no download address"
+msgstr "Este complemento não possui endereço de download"
+
+#: addonCore.py:226
 msgid "addonStoreLite loaded"
 msgstr "addonStoreLite carregado"
 
-#: addonCore.py:446
+#: addonCore.py:614
 msgid "author"
 msgstr "autor"
 
-#: addonCore.py:444
+#: addonCore.py:612
 msgid "available version"
 msgstr "versão disponível"
 
-#: addonCore.py:398
+#: addonCore.py:566
 msgid "disabled"
 msgstr "desativado"
 
-#: addonCore.py:450
+#: addonCore.py:618
 msgid "install date"
 msgstr "data de instalação"
 
-#: addonCore.py:442
+#: addonCore.py:610
 msgid "installed version"
 msgstr "versão instalada"
 
-#: addonCore.py:29
+#: addonCore.py:38
 msgid "of"
 msgstr "de"
 
-#: addonCore.py:452
+#: addonCore.py:620
 msgid "publication date"
 msgstr "data de publicação"
 
-#: addonCore.py:448
+#: addonCore.py:616
 msgid "publisher"
 msgstr "editor"
 
-#: addonCore.py:440
+#: addonCore.py:608
 # keep-identical
 msgid "status"
 msgstr "status"
 
-#: displayFormats.py:26
+#: displayFormats.py:30
 msgid "{name}, version {version}, by {author}, {date}"
 msgstr "{name}, versão {version}, por {author}, {date}"

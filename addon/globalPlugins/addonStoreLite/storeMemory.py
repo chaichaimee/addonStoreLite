@@ -59,7 +59,7 @@ def writeJsonFileAtomic(path, data):
 
 
 def _emptyState():
-	state = {"lastTab": "", "sorts": {}}
+	state = {"lastTab": "", "sorts": {}, "downloadFolder": ""}
 	for mapName in _NAME_MAPS:
 		state[mapName] = {}
 	return state
@@ -72,6 +72,9 @@ def _cleanState(raw):
 	lastTab = raw.get("lastTab")
 	if lastTab in KNOWN_TABS:
 		state["lastTab"] = lastTab
+	downloadFolder = raw.get("downloadFolder")
+	if isinstance(downloadFolder, str):
+		state["downloadFolder"] = downloadFolder
 	sorts = raw.get("sorts")
 	if isinstance(sorts, dict):
 		for tabName, entry in sorts.items():
@@ -105,6 +108,16 @@ def rememberTab(tabName):
 	if state["lastTab"] == tabName:
 		return
 	state["lastTab"] = tabName
+	saveState(state)
+
+
+def rememberDownloadFolder(folderPath):
+	if not folderPath:
+		return
+	state = loadState()
+	if state["downloadFolder"] == folderPath:
+		return
+	state["downloadFolder"] = folderPath
 	saveState(state)
 
 
